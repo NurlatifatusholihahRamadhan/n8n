@@ -1,0 +1,192 @@
+{
+  "name": "Invoice",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Pembuatan Invoice Otomatis",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nama Klien",
+              "fieldName": "Nama Klien",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Jam Kerja",
+              "fieldName": "Jam Kerja",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Rate ",
+              "fieldName": "Rate",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email Klien",
+              "fieldName": "Email Klien",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "path": "e908bf14-6073-4b80-b7ce-99c164fe765c",
+          "ignoreBots": true
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e905543f-9f66-47b9-89f0-114949583ac4",
+      "name": "On form submission",
+      "webhookId": "e908bf14-6073-4b80-b7ce-99c164fe765c"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3d6f30f5-fb70-41c3-bc7f-ddbe667492e9",
+              "name": "Total Biaya",
+              "value": "={{ (Number($json[\"Jam Kerja\"]) * Number($json[\"Rate\"].replace(/\\./g, \"\"))).toLocaleString(\"id-ID\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "23511ea7-0299-434d-b1af-88dbe5b95837",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"id\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Invoice - {{ $json[\"Nama Klien\"] }}</title>\n    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700;800&display=swap\" rel=\"stylesheet\">\n    <style>\n        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }\n        :root {\n            --primary: #1e293b; \n            --accent: #3b82f6;  \n            --text-main: #334155;\n            --text-light: #64748b;\n            --bg-page: #f8fafc;\n            --bg-white: #ffffff;\n            --border: #e2e8f0;\n        }\n        body {\n            font-family: 'Inter', sans-serif;\n            background: var(--bg-page);\n            color: var(--text-main);\n            padding: 40px 20px;\n            font-size: 14px;\n            line-height: 1.6;\n        }\n        .container {\n            max-width: 800px;\n            margin: 0 auto;\n            background: var(--bg-white);\n            border-radius: 12px;\n            box-shadow: 0 10px 25px rgba(0,0,0,0.05);\n            overflow: hidden;\n            border: 1px solid var(--border);\n        }\n        .accent-bar { height: 8px; background: linear-gradient(90deg, var(--primary), var(--accent)); }\n        .content { padding: 50px; }\n        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; }\n        .brand-box h1 { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--primary); letter-spacing: -0.5px; }\n        .brand-box p { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1.5px; }\n        .invoice-title { text-align: right; }\n        .invoice-title h2 { font-size: 40px; font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 10px; }\n        .status-pill { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }\n        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 50px; padding-bottom: 30px; border-bottom: 2px dashed var(--border); }\n        .info-label { font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--accent); margin-bottom: 8px; display: block; }\n        .info-value strong { display: block; font-size: 18px; color: var(--primary); }\n        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }\n        th { background: #f1f5f9; text-align: left; padding: 12px 15px; font-size: 12px; color: var(--text-light); text-transform: uppercase; }\n        td { padding: 20px 15px; border-bottom: 1px solid var(--border); }\n        .item-desc strong { display: block; color: var(--primary); font-size: 16px; }\n        .text-right { text-align: right; }\n        .total-section { display: flex; justify-content: flex-end; }\n        .total-box { width: 100%; max-width: 300px; }\n        .total-row { display: flex; justify-content: space-between; padding: 8px 0; }\n        .total-row.grand-total { margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--primary); font-weight: 600; font-size: 20px; color: var(--primary); }\n        .footer { background: #f1f5f9; padding: 30px 50px; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-light"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "5b3f8fbf-ac41-47ac-91d6-7dd3ddbab2ea",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $node[\"On form submission\"].json[\"Email Klien\"] }}",
+        "subject": "=Invoice Layanan - {{ $json[\"Nama Klien\"] }}",
+        "message": "=Yth. <strong>{{ $json[\"Nama Klien\"] }}</strong>,<br><br>  Terima kasih atas kepercayaan Anda telah menggunakan jasa kami. Bersama email ini, kami lampirkan invoice resmi untuk pekerjaan yang telah diselesaikan.<br><br>  <strong>Detail Tagihan:</strong><br> Total Biaya: Rp {{ $json[\"Total Biaya\"] }}<br><br>  Mohon segera melakukan pembayaran sesuai dengan instruksi yang tertera pada lampiran PDF.<br><br>  Salam hangat,<br> <strong>PT Sumber Bahagia</strong>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "8a86214d-66d1-47eb-b937-466fa71fa3eb",
+      "name": "Send a message",
+      "webhookId": "ab1d8397-4d24-4757-a902-528f981fd316",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kqoZT5affrLEeZUw",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html_content": "={{ $json.html }}",
+        "output_format": "file"
+      },
+      "type": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
+      "typeVersion": 1,
+      "position": [
+        640,
+        0
+      ],
+      "id": "a76f6a7c-d8db-44ee-a969-8394a7b224bb",
+      "name": "HTML to PDF",
+      "credentials": {
+        "htmlcsstopdfApi": {
+          "id": "cIwB57GDVLFcKRBM",
+          "name": "HTML to PDF account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "HTML to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML to PDF": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "01188336-165e-4677-8beb-419c189cc46e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6e0059b7e75d112fe28409c727a4452fbe4a9c02ef0a35c983f8267d254cbb6a"
+  },
+  "id": "Fc9jvVWYOfxun4p0",
+  "tags": []
+}
