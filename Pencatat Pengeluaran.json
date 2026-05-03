@@ -1,0 +1,400 @@
+{
+  "name": "Pencatat Pengeluaran",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "166_Y44iWAGeWRus1mTv9g9AgL0JQ-8KNmpz4shzt4f4",
+          "mode": "list",
+          "cachedResultName": "PENCATATAN KEUANGAN",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/166_Y44iWAGeWRus1mTv9g9AgL0JQ-8KNmpz4shzt4f4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TLo7NFl6_8zvX2_I-sZx3gR9P-WxxputH_MvsbNPG8Q/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Produk": "={{ $json.Nominal }}",
+            "Jumlah": "={{ $json.Jumlah }}",
+            "Tanggal ": "={{ $json.Tanggal }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Tanggal ",
+              "displayName": "Tanggal ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Jumlah",
+              "displayName": "Jumlah",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Produk",
+              "displayName": "Produk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        192
+      ],
+      "id": "61b7a99f-e5cd-4bf2-b58e-13430bfaeb2c",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wunpPXtygrSdKaP2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        256,
+        176
+      ],
+      "id": "c1f4bb7d-4b62-4b38-91d6-98b8b6f228ae",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86da9709-6987-4aa3-83bc-e04473ba62a2",
+              "name": "Tanggal",
+              "value": "={{ $json.text.match(/\\d{1,2}\\s\\w+\\s\\d{4}/)[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "62623f84-c0a2-4857-9327-3bd6c8f20c66",
+              "name": "Jumlah",
+              "value": "={{ $json.text.match(/Rp\\s?([\\d.]+)/)[1].replace(/\\./g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "50322dc0-21e7-4376-ac20-44c801b20387",
+              "name": "Nominal",
+              "value": "Idcloudhost",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        384
+      ],
+      "id": "17275169-67fc-4bd6-b764-ae7d798ddf79",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86da9709-6987-4aa3-83bc-e04473ba62a2",
+              "name": "Tanggal",
+              "value": "={{ $json.text.match(/\\d{1,2}\\s\\w+\\s\\d{4}/)[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "62623f84-c0a2-4857-9327-3bd6c8f20c66",
+              "name": "Jumlah",
+              "value": "={{ $json.text.match(/Rp\\s?([\\d.]+)/)[1].replace(/\\./g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "4b8daff2-578a-49fa-bbec-c08bc90d637b",
+              "name": "Nominal",
+              "value": "Tokopedia",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        192
+      ],
+      "id": "92abf0f6-8eea-4241-9c1c-bf67b9da61c6",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86da9709-6987-4aa3-83bc-e04473ba62a2",
+              "name": "Tanggal",
+              "value": "={{ $json.text.match(/\\d{1,2}\\s\\w+\\s\\d{4}/)[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "62623f84-c0a2-4857-9327-3bd6c8f20c66",
+              "name": "Jumlah",
+              "value": "={{ $json.text.match(/Rp\\s?([\\d.]+)/)[1].replace(/\\./g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "a174400e-043f-4e5f-915a-8435543fd9f6",
+              "name": "Nominal",
+              "value": "Grab",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "34a7c07c-b562-464f-94a5-47f24981d01d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "{{ $json.from.value[0].address }}",
+                    "rightValue": "grab.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "6c7c0736-cf50-4d30-bfef-95efc490fa07"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grab"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5ac63b16-0df1-4251-aee1-b42e64874502",
+                    "leftValue": "{{ $json.from.value[0].address }}",
+                    "rightValue": "tokopedia.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Tokopedia"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a5f032d3-9a38-4dae-9b5f-252354ca6166",
+                    "leftValue": "={{ $json.from.value[0].address }}",
+                    "rightValue": "idcloudhost.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Idcloudhost"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        176
+      ],
+      "id": "dd12373d-23fc-4070-b2a1-01c98b6aef46",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        -464,
+        192
+      ],
+      "id": "8b50a356-e5cd-43ca-96b7-de551aa0959e",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "VDfzALQAKoaSC0gk",
+          "name": "IMAP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f61a9de6-5573-485c-88d8-33624db67c81",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6e0059b7e75d112fe28409c727a4452fbe4a9c02ef0a35c983f8267d254cbb6a"
+  },
+  "id": "49OyZ5IfBj9UIQpH",
+  "tags": []
+}
