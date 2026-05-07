@@ -1,0 +1,315 @@
+{
+  "name": "Tugas-2 AI Pemasaran",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "30ff8919-b609-45e2-9f61-18c9b8585aff",
+              "leftValue": "=success",
+              "rightValue": "={{ $json.data.state }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -208,
+        96
+      ],
+      "id": "97a88d40-7ea7-41cc-a641-33ae96b270e8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/api/v1/jobs/recordInfo",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "taskId",
+              "value": "={{ $json.data.taskId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $node[\"Submit text prompt\"].json[\"api_key\"] }} "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -384,
+        96
+      ],
+      "id": "720a0a83-d614-45f8-9d35-bb0fa3ea2d5a",
+      "name": "Mendapat status generate"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"grok-imagine/image-to-video\",\n  \"input\": {\n    \"image_urls\": [\n      \"{{ $json.img_url.replace('file/d/', 'uc?export=view&id=').split('/view')[0] }}\"\n    ],\n    \"prompt\": \"{{ $json.prompt }}\",\n    \"mode\": \"normal\",\n    \"duration\": \"6\",\n    \"resolution\": \"480p\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -704,
+        96
+      ],
+      "id": "4065b82c-5d64-4cf9-81db-d5c9e118f85f",
+      "name": "image generation req"
+    },
+    {
+      "parameters": {
+        "formTitle": "Generate Video Konten Otomatis",
+        "formDescription": "Isi informasi berikut untuk mulai proses generate video",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Prompt",
+              "fieldName": "prompt"
+            },
+            {
+              "fieldLabel": "Image",
+              "fieldName": "img_url"
+            },
+            {
+              "fieldLabel": "Task Type",
+              "fieldName": "task_type"
+            },
+            {
+              "fieldLabel": "API key",
+              "fieldName": "api_key"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -896,
+        96
+      ],
+      "id": "1ed4b664-b808-4199-9c10-26c0d6e6f0fe",
+      "name": "Submit text prompt",
+      "webhookId": "ef6b5439-3df8-4584-9637-41f8f191351f"
+    },
+    {
+      "parameters": {
+        "amount": 20
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -544,
+        96
+      ],
+      "id": "26e892d4-fd73-42f9-8b5f-934164914763",
+      "name": "proses generate",
+      "webhookId": "aa064f9c-ca6d-4f81-9a73-5f3db73d5373"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = JSON.parse($json.data.resultJson);\n\nreturn [{\n  videoUrl: result.resultUrls?.[0] ?? null\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "65b42762-3f43-47d7-81c2-2c152cffb8b0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.videoUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "044f4bea-01ea-4618-8c09-9f2384d5c3a1",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "name": "Video Tugas 3",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "11YghpJu6kMFo6d4-Grg9E0w5txS9jvqM",
+          "mode": "list",
+          "cachedResultName": "Video Generate",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/11YghpJu6kMFo6d4-Grg9E0w5txS9jvqM"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        400,
+        0
+      ],
+      "id": "de2909c1-4cdf-4fe1-b1fa-86912f3806c0",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "KXacSKRbyZvDsxJk",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "proses generate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mendapat status generate": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "image generation req": {
+      "main": [
+        [
+          {
+            "node": "proses generate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit text prompt": {
+      "main": [
+        [
+          {
+            "node": "image generation req",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "proses generate": {
+      "main": [
+        [
+          {
+            "node": "Mendapat status generate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a72daf0a-8e7f-45e9-8dee-bc8a1428c8a2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6e0059b7e75d112fe28409c727a4452fbe4a9c02ef0a35c983f8267d254cbb6a"
+  },
+  "id": "2106X3C6jCX90Kkw",
+  "tags": []
+}
