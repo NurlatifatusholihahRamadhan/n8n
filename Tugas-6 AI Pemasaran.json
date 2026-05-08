@@ -1,0 +1,1317 @@
+{
+  "name": "Tugas-6 AI Pemasaran",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "36ddcfbe-baec-47b1-88fa-943e957b9f23"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "39bc228e-b71e-4cf6-bc3e-99b65a75dfe6",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "Title",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5d613315-b5fc-4767-a2c2-862e5e5a92a6",
+                    "leftValue": "={{ $json.message.photo[0] }}",
+                    "rightValue": "video",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -416,
+        1760
+      ],
+      "id": "e7fc5afe-71e1-4bae-8afe-c8d48c89a041",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[0].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        2192
+      ],
+      "id": "8f2dd9d6-9908-441c-9a5e-292a6c4ad766",
+      "name": "Get a file",
+      "webhookId": "90cbdcaf-a844-48de-b0fb-c42d45fb98f2",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendVideo",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1216,
+        2192
+      ],
+      "id": "30dcf87e-f7e0-4d3c-83b7-439a3204022f",
+      "name": "Send a video",
+      "webhookId": "fc700ce9-5146-4adc-ae08-147771b1402f",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1024,
+        1504
+      ],
+      "id": "f31acbcb-2071-40cd-abb2-57a532f5deb4",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -624,
+        1776
+      ],
+      "id": "0f519978-d6f5-4968-9c8b-167043c1a583",
+      "name": "Telegram Trigger",
+      "webhookId": "d95c473d-4b01-4539-8bbc-a198bc5924dc",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "Sedang memproses request Anda, harap tunggu sebentar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        2144
+      ],
+      "id": "dbb48fd2-241f-4bbd-8300-9781c740f336",
+      "name": "Respon Cepat",
+      "webhookId": "a3320f45-1caf-4800-8505-bfea14652be2",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f114b11-f00a-441d-8df1-dcdc3a2e387c",
+              "name": "time_slot",
+              "value": "={{ $json.output[0].time_slot }}",
+              "type": "string"
+            },
+            {
+              "id": "2757ca12-bfa9-444c-b9f5-f87c5faa8314",
+              "name": "title",
+              "value": "={{ $json.output[0].title }}",
+              "type": "string"
+            },
+            {
+              "id": "36c779dd-5eed-4726-96ec-f5360a85b9b5",
+              "name": "platform",
+              "value": "={{ $json.output[0].platforms }}",
+              "type": "string"
+            },
+            {
+              "id": "e2c79b4b-b4e7-4d6b-b738-5d4177c6fbe3",
+              "name": "focus",
+              "value": "={{ $json.output[0].focus }}",
+              "type": "string"
+            },
+            {
+              "id": "81e9dae5-7225-4704-bac5-b2ff5140e7cb",
+              "name": "ide",
+              "value": "={{ $json.output[0].ideas }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        1248
+      ],
+      "id": "0b18d9d2-10a1-449f-9cd2-8578118b6cc6",
+      "name": "Output 1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n  {\n    \"time_slot\": \"\",\n    \"title\": \"\",\n    \"platforms\": [],\n    \"focus\": \"\",\n    \"ideas\": []\n  }\n]"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        1760
+      ],
+      "id": "1f90c502-e5d1-4463-80d5-36d728bb5f9b",
+      "name": "Output LLM"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        336,
+        1760
+      ],
+      "id": "5c291621-de15-4863-a8a5-da035ca32dc7",
+      "name": "2.5 flash",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "FC7NtHGWCk1hggqM",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Title: {{ $json.title }}\n\nPlatform: {{ $json.platform }}\n\nIde: {{ $json.ide }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1280,
+        1536
+      ],
+      "id": "8baf73c3-d59d-4e99-9734-58ccdec554cd",
+      "name": "Kirim Ide ke Tim",
+      "webhookId": "a4902254-4e55-42d2-8362-7dd01f657f21",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab46dd8b-4a11-4102-87c1-4292e7150d1a",
+              "name": "tanggal",
+              "value": "={{ $json.message.date }}",
+              "type": "string"
+            },
+            {
+              "id": "21629e47-18b4-4139-a601-7dbb9e122607",
+              "name": "tema",
+              "value": "Teknologi & Produktivitas",
+              "type": "string"
+            },
+            {
+              "id": "5daebe04-5fe8-4eb7-a380-da9ef24deb8c",
+              "name": "waktu",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        1600
+      ],
+      "id": "a8414721-9abf-4dbe-9e86-b8735c7c1ea3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Buat rencana konten harian untuk {{ $json.tanggal }} dengan tema {{ $json.tema }}\n\nSaya mau Anda buatnya dalam bentuk nomor atau point.",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        336,
+        1600
+      ],
+      "id": "673b0b05-f870-45ce-b95f-293c39629ccd",
+      "name": "Membuat Ide Konten"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "Harap ketik /start untuk memulai.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        128,
+        1424
+      ],
+      "id": "f13fa5a4-d15d-46ff-b830-2f59077ba818",
+      "name": "Format Salah (False)",
+      "webhookId": "7f785d2b-3235-478b-859b-a5d956557f99",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e04c010f-f40b-4a0b-aebb-8cc1a1a08b26",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -112,
+        1616
+      ],
+      "id": "0634d278-0ecb-4973-b141-4764f73d5a1c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f114b11-f00a-441d-8df1-dcdc3a2e387c",
+              "name": "time_slot",
+              "value": "={{ $json.output[1].time_slot }}",
+              "type": "string"
+            },
+            {
+              "id": "2757ca12-bfa9-444c-b9f5-f87c5faa8314",
+              "name": "title",
+              "value": "={{ $json.output[1].title }}",
+              "type": "string"
+            },
+            {
+              "id": "36c779dd-5eed-4726-96ec-f5360a85b9b5",
+              "name": "platform",
+              "value": "={{ $json.output[1].platforms }}",
+              "type": "string"
+            },
+            {
+              "id": "e2c79b4b-b4e7-4d6b-b738-5d4177c6fbe3",
+              "name": "focus",
+              "value": "={{ $json.output[1].focus }}",
+              "type": "string"
+            },
+            {
+              "id": "81e9dae5-7225-4704-bac5-b2ff5140e7cb",
+              "name": "ide",
+              "value": "={{ $json.output[1].ideas }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        1408
+      ],
+      "id": "01741e8f-2e9a-4ae8-bcc5-686d0a05f13a",
+      "name": "Output 2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f114b11-f00a-441d-8df1-dcdc3a2e387c",
+              "name": "time_slot",
+              "value": "={{ $json.output[2].time_slot }}",
+              "type": "string"
+            },
+            {
+              "id": "2757ca12-bfa9-444c-b9f5-f87c5faa8314",
+              "name": "title",
+              "value": "={{ $json.output[2].title }}",
+              "type": "string"
+            },
+            {
+              "id": "36c779dd-5eed-4726-96ec-f5360a85b9b5",
+              "name": "platform",
+              "value": "={{ $json.output[2].platforms }}",
+              "type": "string"
+            },
+            {
+              "id": "e2c79b4b-b4e7-4d6b-b738-5d4177c6fbe3",
+              "name": "focus",
+              "value": "={{ $json.output[2].focus }}",
+              "type": "string"
+            },
+            {
+              "id": "81e9dae5-7225-4704-bac5-b2ff5140e7cb",
+              "name": "ide",
+              "value": "={{ $json.output[2].ideas }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        1568
+      ],
+      "id": "ac16c5ac-e3fe-4b25-82ca-6e2888891349",
+      "name": "Output 3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f114b11-f00a-441d-8df1-dcdc3a2e387c",
+              "name": "time_slot",
+              "value": "={{ $json.output[3].time_slot }}",
+              "type": "string"
+            },
+            {
+              "id": "2757ca12-bfa9-444c-b9f5-f87c5faa8314",
+              "name": "title",
+              "value": "={{ $json.output[3].title }}",
+              "type": "string"
+            },
+            {
+              "id": "36c779dd-5eed-4726-96ec-f5360a85b9b5",
+              "name": "platform",
+              "value": "={{ $json.output[3].platforms }}",
+              "type": "string"
+            },
+            {
+              "id": "e2c79b4b-b4e7-4d6b-b738-5d4177c6fbe3",
+              "name": "focus",
+              "value": "={{ $json.output[3].focus }}",
+              "type": "string"
+            },
+            {
+              "id": "81e9dae5-7225-4704-bac5-b2ff5140e7cb",
+              "name": "ide",
+              "value": "={{ $json.output[3].ideas }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        1728
+      ],
+      "id": "05dfcb01-f586-4888-84a0-447ba0bb9b07",
+      "name": "Output 4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "30ff8919-b609-45e2-9f61-18c9b8585aff",
+              "leftValue": "=success",
+              "rightValue": "={{ $json.data.state }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        704,
+        1936
+      ],
+      "id": "5edefe65-6be5-4819-9ebe-fac6b86a9e74",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"model\": \"grok-imagine/text-to-image\",\n  \"input\": {\n    \"prompt\": ($json.message && $json.message.text) ? $json.message.text.replace(/\"/g, '\\\\\"') : \"default prompt\",\n    \"aspect_ratio\": \"3:2\"\n  }\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        192,
+        1920
+      ],
+      "id": "b5a21d16-e294-4b8e-bdeb-d4b8420ba9d1",
+      "name": "image generation req"
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/api/v1/jobs/recordInfo",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "taskId",
+              "value": "={{ $json.data.taskId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer Bearer {{ $node[\"Edit Fields1\"].json[\"api_key\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        1920
+      ],
+      "id": "977cb8cd-6190-4f44-ba8a-ebeebd5a9d5f",
+      "name": "Mendapat status generate"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        384,
+        1920
+      ],
+      "id": "2b2600a1-ec42-475d-8ae4-2d9c822355e6",
+      "name": "Menunggu proses generate image",
+      "webhookId": "aa064f9c-ca6d-4f81-9a73-5f3db73d5373"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst urls = [\n  $json.img1,\n  $json.img2,\n  $json.img3,\n  $json.img4\n].filter(Boolean);\n\n// jadikan 1 URL = 1 item\nreturn urls.map((url, index) => ({\n  json: {\n    url,\n    index: index + 1\n  }\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        1936
+      ],
+      "id": "965dc1bc-12b4-4029-a700-8a31cd25902d",
+      "name": "Loop image"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst result = JSON.parse($json.data.resultJson);\n\nreturn [{\n  img1: result.resultUrls[0] || null,\n  img2: result.resultUrls[1] || null,\n  img3: result.resultUrls[2] || null,\n  img4: result.resultUrls[3] || null\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        1936
+      ],
+      "id": "f214ab4d-d188-408b-a612-616409da8adb",
+      "name": "Format result"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1264,
+        1936
+      ],
+      "id": "4dcd99fd-14e6-4868-8d2b-c60033203b61",
+      "name": "Download gambar"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "8472035315",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        1936
+      ],
+      "id": "9092373d-c669-4404-8ee5-98344aad8e27",
+      "name": "Kirim hasil generate",
+      "webhookId": "7c91ad08-5cd3-4ffb-9cdb-870f59399f0c",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1ba82116-709f-42db-bd1d-7d75f1f8fc7d",
+              "name": "message.text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "85fe8a15-e7bd-4faa-8f25-a6907d79bc21",
+              "name": "api_key",
+              "value": "ff2cc8d1828c62aaf6b2bff8f21b5ace",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        1920
+      ],
+      "id": "a14f8705-6df5-4b4e-9bae-0190080f042d",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0efd967-e964-4a60-bfd4-37449380eb57",
+              "name": "file_path",
+              "value": "={{ $('Get a file').item.json.result.file_path }}",
+              "type": "string"
+            },
+            {
+              "id": "878f7ea1-d421-414f-b246-418613108f34",
+              "name": "api_key",
+              "value": "9bb4119cba266871e1b2ab1c02a69a13",
+              "type": "string"
+            },
+            {
+              "id": "af1dcbcb-fb9d-4801-9359-ea60dd46d2e6",
+              "name": "caption",
+              "value": "={{ $('Telegram Trigger').item.json.message.caption }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        2192
+      ],
+      "id": "3af52acf-f6a6-4b3a-9d09-98fa0f74a5db",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/api/v1/jobs/recordInfo",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "taskId",
+              "value": "={{ $json.data.taskId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $node[\"Edit Fields2\"].json[\"api_key\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        512,
+        2192
+      ],
+      "id": "1b2d9ab9-15cf-454c-90da-7533adf5e3c5",
+      "name": "Mendapat status generate1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "30ff8919-b609-45e2-9f61-18c9b8585aff",
+              "leftValue": "=success",
+              "rightValue": "={{ $json.data.state }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        688,
+        2192
+      ],
+      "id": "e53a2828-e4ef-4842-afe0-2dc6cae3e489",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"model\": \"grok-imagine/image-to-video\",\n  \"input\": {\n    \"image_urls\": [\n      \"https://api.telegram.org/file/bot\" + \"8586158936:AAGbSqn6Dl1mL3x3WZV8frJRUhj9ySHRLyM\" + \"/\" + $json.file_path\n    ],\n   \"prompt\": ($node[\"Telegram Trigger\"].json.message.caption || \"Cinematic animation\") + \", slow motion, highly detailed, professional lighting, 4k resolution, smooth transitions, no distortion\",\n    \"mode\": \"normal\",\n    \"duration\": \"6\",\n    \"resolution\": \"720p\"\n  }\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        160,
+        2192
+      ],
+      "id": "d82b9f3d-c351-4fee-a0f6-0f68f325e0f2",
+      "name": "Video generation req"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.videoUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1024,
+        2160
+      ],
+      "id": "8cf21993-8b5f-4279-8b3a-94c97cf98924",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = JSON.parse($json.data.resultJson);\n\nreturn [{\n  videoUrl: result.resultUrls?.[0] ?? null\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        2176
+      ],
+      "id": "f123ffcb-594a-48b5-86f5-543d53eb2eaa",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "amount": 20
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        352,
+        2192
+      ],
+      "id": "2fb6fdf2-8bab-46b9-aece-b3d71ca020d7",
+      "name": "proses generate",
+      "webhookId": "aa064f9c-ca6d-4f81-9a73-5f3db73d5373"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Kirim Ide ke Tim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respon Cepat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output 1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output LLM": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Membuat Ide Konten",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2.5 flash": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Membuat Ide Konten",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Membuat Ide Konten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Membuat Ide Konten": {
+      "main": [
+        [
+          {
+            "node": "Output 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Output 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Output 3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Output 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Salah (False)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output 2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Output 3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Output 4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Format result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Menunggu proses generate image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "image generation req": {
+      "main": [
+        [
+          {
+            "node": "Menunggu proses generate image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mendapat status generate": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Menunggu proses generate image": {
+      "main": [
+        [
+          {
+            "node": "Mendapat status generate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format result": {
+      "main": [
+        [
+          {
+            "node": "Loop image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop image": {
+      "main": [
+        [
+          {
+            "node": "Download gambar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download gambar": {
+      "main": [
+        [
+          {
+            "node": "Kirim hasil generate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "image generation req",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Video generation req",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mendapat status generate1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "proses generate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video generation req": {
+      "main": [
+        [
+          {
+            "node": "proses generate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "proses generate": {
+      "main": [
+        [
+          {
+            "node": "Mendapat status generate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send a video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c521b10f-841f-4290-93bf-1d3ae6c50af4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6e0059b7e75d112fe28409c727a4452fbe4a9c02ef0a35c983f8267d254cbb6a"
+  },
+  "id": "inlkt6nlwAjXJjqC",
+  "tags": []
+}
