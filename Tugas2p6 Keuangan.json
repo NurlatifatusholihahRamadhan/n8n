@@ -1,0 +1,270 @@
+{
+  "name": "Tugas2p6 Keuangan",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -832,
+        192
+      ],
+      "id": "b2a511f0-6ffe-4f4e-8aeb-cb0d94ec5af9",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FYtWHok_HZnIYmrWwadvaYQY9F2lXamnx9jM4uqe-ac",
+          "mode": "list",
+          "cachedResultName": "Copy of Data Dummy Catatan Keuangan",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FYtWHok_HZnIYmrWwadvaYQY9F2lXamnx9jM4uqe-ac/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FYtWHok_HZnIYmrWwadvaYQY9F2lXamnx9jM4uqe-ac/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -624,
+        192
+      ],
+      "id": "bd138348-3c40-4518-848f-b138351d35be",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wunpPXtygrSdKaP2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "74ba8f77-b108-4dec-9387-dabe9eb3c526",
+              "leftValue": "={{ $node[\"Filter 7 Hari\"].json.hasExpenses }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -208,
+        192
+      ],
+      "id": "41aaa7a6-28c7-4cd4-8cc3-8adbb4f82c5d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "8472035315",
+        "text": "=Tidak ditemukan log pengeluaran selama 7 hari terakhir.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        288
+      ],
+      "id": "7a69fff3-ca2f-4691-9854-82d431238b3e",
+      "name": "Send a text message",
+      "webhookId": "460b0f79-db45-49e8-8cbb-21d18867cdc8",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Data Pengeluaran:\n{{ $node[\"Filter 7 Hari\"].json.promptData }}\n\n---\nInstruksi:\nTulis ringkasan kebiasaan belanja saya minggu ini dan beri 1 saran penghematan.\n\nATURAN FORMAT (WAJIB):\n1. JANGAN gunakan tanda bintang (**) untuk menebalkan teks.\n2. GUNAKAN tag HTML <b>teks</b> untuk menebalkan kata-kata penting, kategori, judul poin, dan nominal uang.\n3. Gunakan baris baru (newline) yang jelas agar pesan mudah dibaca.\n\nContoh format yang diinginkan:\n<b>Ringkasan Belanja:</b>\n- <b>Makanan</b>: Anda menghabiskan total <b>Rp150.000</b>.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e1567dcb-c2c3-4bdc-97e9-a9470d13754a",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        0,
+        144
+      ],
+      "id": "424bff2e-45a3-4f14-90f8-ccd4ef5df11b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "FC7NtHGWCk1hggqM",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8472035315",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        336,
+        0
+      ],
+      "id": "ab223c3b-2175-491c-a2c8-fb6dcc324cf2",
+      "name": "Send a text message1",
+      "webhookId": "91881426-7ad0-46fd-b43e-4534c22d6907",
+      "credentials": {
+        "telegramApi": {
+          "id": "fs31ML9785MEzwkZ",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst today = new Date();\ntoday.setHours(23, 59, 59, 999); // inklusif hari ini sampai akhir hari\n\nconst sevenDaysAgo = new Date();\nsevenDaysAgo.setDate(today.getDate() - 7);\nsevenDaysAgo.setHours(0, 0, 0, 0);\n\nlet weeklyExpenses = [];\nlet formattedString = \"Data pengeluaran saya minggu ini:\\n\";\nlet hasExpenses = false;\n\nfor (const item of items) {\n  const rawTanggal = item.json.Tanggal; // format: \"13/04/2026\"\n  \n  // Parse manual DD/MM/YYYY → YYYY-MM-DD agar valid di semua engine\n  const [day, month, year] = rawTanggal.split(\"/\");\n  const expenseDate = new Date(`${year}-${month}-${day}`);\n\n  if (expenseDate >= sevenDaysAgo && expenseDate <= today) {\n    weeklyExpenses.push(item.json);\n    formattedString += `- ${item.json.Deskripsi}: Rp${item.json[\"Jumlah (IDR)\"]}\\n`;\n    hasExpenses = true;\n  }\n}\n\nreturn [{\n  json: {\n    promptData: formattedString,\n    hasExpenses: hasExpenses\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        192
+      ],
+      "id": "0a0960f8-c00b-4f04-a0d3-2dd0d584c55d",
+      "name": "Filter 7 Hari"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter 7 Hari",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter 7 Hari": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4312bdef-5bd4-4dee-9b96-42d6db3b53c9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6e0059b7e75d112fe28409c727a4452fbe4a9c02ef0a35c983f8267d254cbb6a"
+  },
+  "id": "iACYmM6uGEqeJleR",
+  "tags": []
+}
