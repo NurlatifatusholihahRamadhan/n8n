@@ -1,0 +1,286 @@
+{
+  "name": "Tugas4_SOP AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        64
+      ],
+      "id": "426ed337-382c-4786-b129-98e469e1f796",
+      "name": "Telegram Trigger",
+      "webhookId": "8af3fc4f-cdbc-46f0-a324-fbeea85ea53a",
+      "credentials": {
+        "telegramApi": {
+          "id": "o7N3rt5Bp2o4sNii",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4474d256-49e7-4403-8458-fd3b8d414d9d",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "1. Bagaimana prosedur reimbursement?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "6cf66a68-1f95-44c1-aef8-2ae7ace0168e",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "2. Prosedur pengajuan cuti tahunan?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "f49ade19-309c-4c20-94fe-390884691cab",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "3. Bagaimana aturan lembur di perusahaan?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "7bec0859-3471-4c99-bb78-e8f7513f66fd",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "4. Apa syarat klaim asuransi kesehatan?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "b39c3c3a-54e9-414b-a331-3af7ad1bde11",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "5. Bagaiman prosedur permintaan alat kerja baru?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -224,
+        64
+      ],
+      "id": "117befe1-2b4d-41e5-b492-12d5fadc7d80",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Anda adalah SOP AI Agent\n\nAturan Wajib:\n\nWajib menggunakan Tool \"Data Pertanyaan\" sebelum memberikan jawaban.\nJawaban harus berasal dari hasil Tool, bukan dari pengetahuan umum.\nDilarang menambahkan asumsi atau informasi di luar data dari Tool.\nJika data tidak ditemukan, wajib menjawab:\n\"Maaf, informasi tersebut tidak tersedia di SOP.\"\n\nInput Pertanyaan:\n{{ $node[\"Telegram Trigger\"].json.message.text }}\n\nOutput:\nJawaban harus berdasarkan data dari SOP.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        144,
+        48
+      ],
+      "id": "56ebaac5-e6ab-4edc-b8da-194c5793676c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "=Pertanyaan yang anda kirimkan tidak sesuai harap menggunakan pertanyaan dibawah ini:\n1. Bagaimana prosedur reimbursement?\n2. Prosedur pengajuan cuti tahunan\n3. Bagaimana aturan lembur di perusahaan?\n4. Apa syarat klaim asuransi kesehatan?\n5. Bagaimana prosedur permintaan alat kerja baru?",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        224
+      ],
+      "id": "f495e40d-5c52-4181-8357-3a6f985f9870",
+      "name": "Send a text message",
+      "webhookId": "1e17cbec-d3ef-426a-9495-20236970ccec",
+      "credentials": {
+        "telegramApi": {
+          "id": "o7N3rt5Bp2o4sNii",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1aplTjQzLD938jur3gDP1SWr78xTtz_sPDSm31fxCHhw",
+          "mode": "list",
+          "cachedResultName": "Pertanyaan PT lana florist",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aplTjQzLD938jur3gDP1SWr78xTtz_sPDSm31fxCHhw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aplTjQzLD938jur3gDP1SWr78xTtz_sPDSm31fxCHhw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        208
+      ],
+      "id": "8e876aa8-7ee0-4174-b958-306c4b9cee8b",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wunpPXtygrSdKaP2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8472035315",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        528,
+        48
+      ],
+      "id": "703c5c63-88e5-47a6-a910-6d22eef59979",
+      "name": "Send a text message1",
+      "webhookId": "2561056a-9c7f-4d81-9c30-721293e27dae",
+      "credentials": {
+        "telegramApi": {
+          "id": "o7N3rt5Bp2o4sNii",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        144,
+        208
+      ],
+      "id": "7ee1e822-b855-466c-aa1c-02a07ee8ff05",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "FMXamEVu72lIF6KU",
+          "name": "Groq account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "36307777-5357-4d5a-b72f-273d7ee5c15d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6e0059b7e75d112fe28409c727a4452fbe4a9c02ef0a35c983f8267d254cbb6a"
+  },
+  "id": "aRnRIIQVAL9x1FHr",
+  "tags": []
+}
